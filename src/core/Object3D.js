@@ -1,3 +1,5 @@
+// https://github.com/omni360/ThreeJS-Notes/blob/master/core/Object3D.js
+
 import { Quaternion } from '../math/Quaternion.js';
 import { Vector3 } from '../math/Vector3.js';
 import { Matrix4 } from '../math/Matrix4.js';
@@ -35,25 +37,43 @@ class Object3D extends EventDispatcher {
 
 		this.uuid = MathUtils.generateUUID();
 
+		// 对象名称
 		this.name = '';
+
+		// 对象类型
 		this.type = 'Object3D';
 
+		// 对象的父级
 		this.parent = null;
+
+		// 对象的子级
 		this.children = [];
 
+		// 对象的上方向
 		this.up = Object3D.DefaultUp.clone();
 
+		// 位置
 		const position = new Vector3();
+
+		// 旋转
 		const rotation = new Euler();
+
+		// 四元数
 		const quaternion = new Quaternion();
+
+		// 比例
 		const scale = new Vector3( 1, 1, 1 );
 
+		// 给对象的rotation属性绑定setFromEuler()方法
+		// 当rotation属性值更改,调用setFromEuler()方法
 		function onRotationChange() {
 
 			quaternion.setFromEuler( rotation, false );
 
 		}
 
+		// 给对象的rotation属性绑定setFromQuaternion()方法
+		// 当rotation属性值更改,调用setFromQuaternion()方法
 		function onQuaternionChange() {
 
 			rotation.setFromQuaternion( quaternion, undefined, false );
@@ -85,30 +105,49 @@ class Object3D extends EventDispatcher {
 				value: scale
 			},
 			modelViewMatrix: {
+				// 视图矩阵
 				value: new Matrix4()
 			},
 			normalMatrix: {
+				// 普通矩阵（3阶矩阵）
 				value: new Matrix3()
 			}
 		} );
 
+		// 对象的变换矩阵
 		this.matrix = new Matrix4();
+
+		// 对象的世界矩阵
 		this.matrixWorld = new Matrix4();
 
+		// 是否需要自动更新
 		this.matrixAutoUpdate = Object3D.DefaultMatrixAutoUpdate;
+
+		// 世界矩阵是否需要更新
 		this.matrixWorldNeedsUpdate = false;
 
+		// 层级
 		this.layers = new Layers();
+
+		// 是否可见
 		this.visible = true;
 
+		// 是否生成阴影
 		this.castShadow = false;
+
+		// 是否支持阴影覆盖
 		this.receiveShadow = false;
 
+		// 是否需要平头界面体裁剪
 		this.frustumCulled = true;
+
+		// 渲染的顺序
 		this.renderOrder = 0;
 
+		// 运动列表
 		this.animations = [];
 
+		// 用户自定义数据
 		this.userData = {};
 
 	}
