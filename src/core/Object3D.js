@@ -152,20 +152,25 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	// 提供生命周期——渲染前
 	onBeforeRender( /* renderer, scene, camera, geometry, material, group */ ) {}
 
+	// 提供生命周期——渲染后
 	onAfterRender( /* renderer, scene, camera, geometry, material, group */ ) {}
 
+	// 应用4阶矩阵
 	applyMatrix4( matrix ) {
 
 		if ( this.matrixAutoUpdate ) this.updateMatrix();
 
 		this.matrix.premultiply( matrix );
 
+		// 分解位置，旋转，缩放
 		this.matrix.decompose( this.position, this.quaternion, this.scale );
 
 	}
 
+	// 应用四元数
 	applyQuaternion( q ) {
 
 		this.quaternion.premultiply( q );
@@ -174,6 +179,8 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	// 通过四元数的方式旋转任意坐标轴(参数axis)旋转角度(参数angle),
+	// 最后将结果返回到this.quternion属性中
 	setRotationFromAxisAngle( axis, angle ) {
 
 		// assumes axis is normalized
@@ -182,12 +189,16 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	// 通过一次欧拉旋转(参数euler)设置四元数旋转,
+	// 最后将结果返回到this.quternion属性中
 	setRotationFromEuler( euler ) {
 
 		this.quaternion.setFromEuler( euler, true );
 
 	}
 
+	// 利用一个参数m(旋转矩阵),达到旋转变换的目的吧,
+	// 最后将结果返回到this.quternion属性中
 	setRotationFromMatrix( m ) {
 
 		// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -196,6 +207,7 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	// 通过规范化的旋转四元数直接应用旋转
 	setRotationFromQuaternion( q ) {
 
 		// assumes q is normalized
@@ -204,6 +216,13 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 * @description 通过坐标轴旋转
+	 * @param {THREE.Vector3} axis 
+	 * @param {float} angle 弧度
+	 * @return {Object3D} 
+	 * @memberof Object3D
+	 */
 	rotateOnAxis( axis, angle ) {
 
 		// rotate object on axis in object space
@@ -231,24 +250,58 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 绕X轴旋转angle度
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	rotateX( angle ) {
 
 		return this.rotateOnAxis( _xAxis, angle );
 
 	}
 
+	/**
+	 *
+	 * @description  绕Y轴旋转angle度
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	rotateY( angle ) {
 
 		return this.rotateOnAxis( _yAxis, angle );
 
 	}
 
+	/**
+	 *
+	 * @description 绕Z轴旋转angle度
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	rotateZ( angle ) {
 
 		return this.rotateOnAxis( _zAxis, angle );
 
 	}
 
+
+	/**
+	 *
+	 * @description 对象延任意坐标轴(参数axis)移动指定距离(参数distance)
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} axis
+	 * @param {*} distance
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	translateOnAxis( axis, distance ) {
 
 		// translate object by distance along axis in object space
@@ -262,36 +315,91 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 对象延X轴移动指定距离(参数distance)
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} distance
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	translateX( distance ) {
 
 		return this.translateOnAxis( _xAxis, distance );
 
 	}
 
+
+	/**
+	 *
+	 * @description  对象延Y轴移动指定距离(参数distance)
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} distance
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	translateY( distance ) {
 
 		return this.translateOnAxis( _yAxis, distance );
 
 	}
 
+	 
+	/**
+	 *
+	 * @description 对象延Z轴移动指定距离(参数distance)
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} distance
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	translateZ( distance ) {
 
 		return this.translateOnAxis( _zAxis, distance );
 
 	}
 
+
+	/**
+	 *
+	 * @description 将参数vector,从模型坐标系变换成世界坐标系
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} vector
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	localToWorld( vector ) {
 
 		return vector.applyMatrix4( this.matrixWorld );
 
 	}
 
+
+	/**
+	 *
+	 * @description 将参数vector,从世界坐标系变换成模型坐标系
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} vector
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	worldToLocal( vector ) {
 
 		return vector.applyMatrix4( _m1.copy( this.matrixWorld ).invert() );
 
 	}
 
+
+	/**
+	 *
+	 * @description 用来旋转对象,并将对象面对空间中的点vector
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @memberof Object3D
+	 */
 	lookAt( x, y, z ) {
 
 		// This method does not support objects having non-uniformly-scaled parent(s)
@@ -334,6 +442,15 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 对象(参数object),设置为当前对象的子对象
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} object
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	add( object ) {
 
 		if ( arguments.length > 1 ) {
@@ -378,6 +495,15 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 对象(参数object),从当前对象的子对象列表中删除
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} object
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	remove( object ) {
 
 		if ( arguments.length > 1 ) {
@@ -407,6 +533,13 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 从父级中移除
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	removeFromParent() {
 
 		const parent = this.parent;
@@ -421,6 +554,14 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 清空子级
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	clear() {
 
 		for ( let i = 0; i < this.children.length; i ++ ) {
@@ -468,18 +609,43 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 通过id获得子对象
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} id
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	getObjectById( id ) {
 
 		return this.getObjectByProperty( 'id', id );
 
 	}
 
+	/**
+	 *
+	 * @description 通过name获得子对象
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} name
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	getObjectByName( name ) {
 
 		return this.getObjectByProperty( 'name', name );
 
 	}
 
+	/**
+	 *
+	 * @description 获取子对象的属性
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} name
+	 * @param {*} value
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	getObjectByProperty( name, value ) {
 
 		if ( this[ name ] === value ) return this;
@@ -501,6 +667,14 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 获得世界坐标系下的平移坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	getWorldPosition( target ) {
 
 		this.updateWorldMatrix( true, false );
@@ -509,6 +683,14 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 获得世界坐标系下的四元数
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	getWorldQuaternion( target ) {
 
 		this.updateWorldMatrix( true, false );
@@ -519,6 +701,15 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 获得世界坐标系下的缩放向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	getWorldScale( target ) {
 
 		this.updateWorldMatrix( true, false );
@@ -529,6 +720,14 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 获取世界坐标系下的方向
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	getWorldDirection( target ) {
 
 		this.updateWorldMatrix( true, false );
@@ -541,6 +740,14 @@ class Object3D extends EventDispatcher {
 
 	raycast() {}
 
+
+	/**
+	 *
+	 * @description 遍历当前对象以及子对象并且应用callback方法
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} callback
+	 * @memberof Object3D
+	 */
 	traverse( callback ) {
 
 		callback( this );
@@ -555,6 +762,14 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 遍历当前对象以及子对象，当对象可见时并且应用callback方法
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} callback
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	traverseVisible( callback ) {
 
 		if ( this.visible === false ) return;
@@ -571,6 +786,13 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 遍历当前对象父级，并且应用callback方法
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} callback
+	 * @memberof Object3D
+	 */
 	traverseAncestors( callback ) {
 
 		const parent = this.parent;
@@ -585,6 +807,12 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description  根据 位置，四元数，缩放比例 更新矩阵，并设置世界矩阵需要更新
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof Object3D
+	 */
 	updateMatrix() {
 
 		this.matrix.compose( this.position, this.quaternion, this.scale );
@@ -593,6 +821,14 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 根据 位置，四元数，缩放比例 更新世界坐标系下的矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} force 是否强制更新
+	 * @memberof Object3D
+	 */
 	updateMatrixWorld( force ) {
 
 		if ( this.matrixAutoUpdate ) this.updateMatrix();
@@ -627,6 +863,15 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 根据 位置，四元数，缩放比例 更新世界矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} updateParents
+	 * @param {*} updateChildren
+	 * @memberof Object3D
+	 */
 	updateWorldMatrix( updateParents, updateChildren ) {
 
 		const parent = this.parent;
@@ -665,6 +910,14 @@ class Object3D extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description Object3D存为JSON格式
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} meta
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	toJSON( meta ) {
 
 		// meta is a string when called from JSON.stringify
@@ -904,6 +1157,15 @@ class Object3D extends EventDispatcher {
 
 	}
 
+
+	/**
+	 *
+	 * @description 克隆Object3D
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} recursive true,克隆其子对象,否则只克隆当前对象
+	 * @return {*} 
+	 * @memberof Object3D
+	 */
 	clone( recursive ) {
 
 		return new this.constructor().copy( this, recursive );

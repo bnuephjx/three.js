@@ -11,6 +11,16 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 设置三维向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	set( x, y, z ) {
 
 		if ( z === undefined ) z = this.z; // sprite.scale.set(x,y)
@@ -23,6 +33,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 设置缩放比例
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} scalar
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setScalar( scalar ) {
 
 		this.x = scalar;
@@ -33,6 +51,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 设置X轴坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setX( x ) {
 
 		this.x = x;
@@ -41,6 +67,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 设置Y轴坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} y
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setY( y ) {
 
 		this.y = y;
@@ -49,6 +83,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 设置Z轴坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} z
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setZ( z ) {
 
 		this.z = z;
@@ -57,6 +99,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 根据索引设置3维向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} index
+	 * @param {*} value
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setComponent( index, value ) {
 
 		switch ( index ) {
@@ -72,6 +123,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 根据索引获取坐标值
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} index
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	getComponent( index ) {
 
 		switch ( index ) {
@@ -85,12 +144,27 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 克隆
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	clone() {
 
 		return new this.constructor( this.x, this.y, this.z );
 
 	}
 
+	/**
+	 *
+	 * @description 复制三维向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	copy( v ) {
 
 		this.x = v.x;
@@ -101,6 +175,16 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 三维向量相加
+	 * 几何意义: 合并 v , w 分量 , v的尾到w的头
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} w
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	add( v, w ) {
 
 		if ( w !== undefined ) {
@@ -118,6 +202,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向量x,y,z分量与s标量相加
+	 * 几何意义: 向量分别向 x , y ，z轴平移s
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} s
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	addScalar( s ) {
 
 		this.x += s;
@@ -128,6 +221,16 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向量 a + b 相加
+	 * 几何意义: 合并a + b 分量 a的尾到b的头
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} a
+	 * @param {*} b
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	addVectors( a, b ) {
 
 		this.x = a.x + b.x;
@@ -138,6 +241,16 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向量 a + b(经过缩放) 相加
+	 * 几何意义: 合并a + b(经过缩放)  分量 a的尾到b的头
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} s
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	addScaledVector( v, s ) {
 
 		this.x += v.x * s;
@@ -148,6 +261,16 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向量v ,w相减(不满足交换律)
+	 * 几何意义: v - w 分量 ; v的尾到w的尾
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} w
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	sub( v, w ) {
 
 		if ( w !== undefined ) {
@@ -165,6 +288,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向量x,y,z分量与s标量相减
+	 * 几何意义: 向量分别向 x , y ，z轴平移s
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} s
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	subScalar( s ) {
 
 		this.x -= s;
@@ -175,6 +307,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 * @description 三维向量 a , b 相减
+	 * 几何意义: a -b 分量 ; a的尾到b的尾
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} a
+	 * @param {*} b
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	subVectors( a, b ) {
 
 		this.x = a.x - b.x;
@@ -185,6 +326,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 三维向量与 v 向量相乘
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} w
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	multiply( v, w ) {
 
 		if ( w !== undefined ) {
@@ -202,6 +352,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向量与标量相乘
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} scalar
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	multiplyScalar( scalar ) {
 
 		this.x *= scalar;
@@ -212,6 +370,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向量a,b相乘
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} a
+	 * @param {*} b
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	multiplyVectors( a, b ) {
 
 		this.x = a.x * b.x;
@@ -222,6 +389,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 当前向量通过参数euler(THREE.Euler对象,欧拉对象)转换成四元数
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} euler
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	applyEuler( euler ) {
 
 		if ( ! ( euler && euler.isEuler ) ) {
@@ -234,12 +409,31 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 当前向量根据指定的轴(一个标准单位的向量),和角度旋转
+	 * 或者说根据指定的轴和角度应用旋转
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} axis
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	applyAxisAngle( axis, angle ) {
 
 		return this.applyQuaternion( _quaternion.setFromAxisAngle( axis, angle ) );
 
 	}
 
+	/**
+	 *
+	 * @description 当前向量乘以一个3x3的矩阵
+	 * 几何意义： 对当前向量做线性变换 ， 不含平移
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	applyMatrix3( m ) {
 
 		const x = this.x, y = this.y, z = this.z;
@@ -253,12 +447,29 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 应用正规矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	applyNormalMatrix( m ) {
 
 		return this.applyMatrix3( m ).normalize();
 
 	}
 
+	/**
+	 *
+	 * @description 当前向量乘以一个4x4的矩阵
+	 * 几何意义： 对当前向量做仿射变换 ， 包含平移
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	applyMatrix4( m ) {
 
 		const x = this.x, y = this.y, z = this.z;
@@ -274,6 +485,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 用一个四元数q变换当前3维向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} q
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	applyQuaternion( q ) {
 
 		const x = this.x, y = this.y, z = this.z;
@@ -296,18 +515,44 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 对向量做相机投影
+	 * 几何意义： 向量v × 投影矩阵 × 相机的世界矩阵的逆（右乘）
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} camera
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	project( camera ) {
 
 		return this.applyMatrix4( camera.matrixWorldInverse ).applyMatrix4( camera.projectionMatrix );
 
 	}
 
+	/**
+	 *
+	 * @description 对向量做相机反投影
+	 * 几何意义：投影向量反投影回世界向量  向量v × 世界矩阵 × 相机的投影矩阵的逆
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} camera
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	unproject( camera ) {
 
 		return this.applyMatrix4( camera.projectionMatrixInverse ).applyMatrix4( camera.matrixWorld );
 
 	}
 
+	/**
+	 *
+	 * @description 通过参数m(一个Matrix4投射矩阵的3x3子集)转换这个向量的方向
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m 4×4投影矩阵，仿射矩阵
+	 * @return {*} 单位化矩阵
+	 * @memberof Vector3
+	 */
 	transformDirection( m ) {
 
 		// input: THREE.Matrix4 affine matrix
@@ -324,6 +569,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * 三维向量的(x,y,z)坐标值与参数v的(x,y,z)相除.并返回新的坐标值的三维向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	divide( v ) {
 
 		this.x /= v.x;
@@ -334,12 +587,30 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 三维向量的(x,y,z)坐标值直接与参数scalar相除.并返回新的坐标值的三维向量
+	 * 几何意义：三维向量的缩放
+	 * 参数scalar不能为0
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} scalar
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	divideScalar( scalar ) {
 
 		return this.multiplyScalar( 1 / scalar );
 
 	}
 
+	/**
+	 *
+	 * @description 返回最小值
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	min( v ) {
 
 		this.x = Math.min( this.x, v.x );
@@ -350,6 +621,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 返回最大值
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	max( v ) {
 
 		this.x = Math.max( this.x, v.x );
@@ -360,6 +639,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 返回区间值
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} min
+	 * @param {*} max
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	clamp( min, max ) {
 
 		// assumes min < max, componentwise
@@ -390,6 +678,13 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 向下取整
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	floor() {
 
 		this.x = Math.floor( this.x );
@@ -400,6 +695,14 @@ class Vector3 {
 
 	}
 
+
+	/**
+	 *
+	 * @description 向上取整
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	ceil() {
 
 		this.x = Math.ceil( this.x );
@@ -410,6 +713,14 @@ class Vector3 {
 
 	}
 
+
+	/**
+	 *
+	 * @description 四舍五入
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	round() {
 
 		this.x = Math.round( this.x );
@@ -430,6 +741,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 负向量
+	 * 几何意义：和原向量大小相等，方向相反的向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	negate() {
 
 		this.x = - this.x;
@@ -440,6 +759,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 三维向量点乘（点积）
+	 * 几何意义：向量大小与向量夹角cos的积  a.b =||a|| ||b|| cos0
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	dot( v ) {
 
 		return this.x * v.x + this.y * v.y + this.z * v.z;
@@ -448,36 +776,86 @@ class Vector3 {
 
 	// TODO lengthSquared?
 
+	/**
+	 *
+	 * @description 求向量长度（模）的平方
+	 * 几何意义：向量两分量构成的直角三角形斜边长的平方
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	lengthSq() {
 
 		return this.x * this.x + this.y * this.y + this.z * this.z;
 
 	}
 
+
+	/**
+	 *
+	 * @description 求向量长度（模）
+	 * 几何意义：向量两分量构成的直角三角形斜边长
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	length() {
 
 		return Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z );
 
 	}
 
+	/**
+	 *
+	 * @description 三维向量的曼哈顿长度
+	 * 几何意义： 三维向量在各坐标轴长度和
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	manhattanLength() {
 
 		return Math.abs( this.x ) + Math.abs( this.y ) + Math.abs( this.z );
 
 	}
 
+	/**
+	 *
+	 * @description 三维向量的单位化
+	 * 几何意义：转换为长度为1，方向相同的向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	normalize() {
 
 		return this.divideScalar( this.length() || 1 );
 
 	}
 
+	/**
+	 *
+	 * @description 按照参数l(长度)设置新的3维向量(x,y,z)值
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} length
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setLength( length ) {
 
 		return this.normalize().multiplyScalar( length );
 
 	}
 
+	/**
+	 *
+	 * @description 当前3维向量(x,y,z)设置为下限和参数v(x,y,z)设为上限 之间进行线性插值
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} alpha
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	lerp( v, alpha ) {
 
 		this.x += ( v.x - this.x ) * alpha;
@@ -498,6 +876,18 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 3维向量的叉乘
+	 * 几何意义： 方向垂直与原连个向量，长度等于两个向量大小和sin0的值
+	 * 二维上是两个向量构成的平行四边形面积（长宽）
+	 * 三维上是两个向量构成的平行六面体的体积（长宽高）
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} w
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	cross( v, w ) {
 
 		if ( w !== undefined ) {
@@ -524,6 +914,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 将当前3维向量(x,y,z)投影一个向量到另一个向量,参数vector(x,y,z)
+	 * 几何意义： 向量投影的向量， v' = n*dot(v,n) / (mod(n))* (mod(n)) ,n 为单位向量的话，(mod(n))* (mod(n))=1
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	projectOnVector( v ) {
 
 		const denominator = v.lengthSq();
@@ -532,10 +931,20 @@ class Vector3 {
 
 		const scalar = v.dot( this ) / denominator;
 
+		//投影一个向量到另一个向量
 		return this.copy( v ).multiplyScalar( scalar );
 
 	}
 
+	/**
+	 *
+	 * @description 将当前3维向量(x,y,z)投影一个向量到一个平面(用一个向量表示,参数planeNormal(x,y,z)),然后当前向量减去
+	 * 几何意义：从这个向量到这个向量到平面法线的投影
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} planeNormal
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	projectOnPlane( planeNormal ) {
 
 		_vector.copy( this ).projectOnVector( planeNormal );
@@ -544,6 +953,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 沿着法线(参数normal)反射向量
+	 * reflect方法其实就是对一个向量进行镜像
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} normal
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	reflect( normal ) {
 
 		// reflect incident vector off plane orthogonal to normal
@@ -553,6 +971,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 当前向量与另一个向量的夹角
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	angleTo( v ) {
 
 		const denominator = Math.sqrt( this.lengthSq() * v.lengthSq() );
@@ -567,12 +993,28 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 当前3维向量到参数向量v的距离
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	distanceTo( v ) {
 
 		return Math.sqrt( this.distanceToSquared( v ) );
 
 	}
 
+	/**
+	 *
+	 * @description 当前3维向量到参数向量v的距离平方
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	distanceToSquared( v ) {
 
 		const dx = this.x - v.x, dy = this.y - v.y, dz = this.z - v.z;
@@ -621,6 +1063,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 从矩阵中的元素获得位移
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setFromMatrixPosition( m ) {
 
 		const e = m.elements;
@@ -633,6 +1083,14 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 从矩阵中的元素获得缩放
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setFromMatrixScale( m ) {
 
 		const sx = this.setFromMatrixColumn( m, 0 ).length();
@@ -647,24 +1105,59 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 从矩阵中的元素获得列主序向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @param {*} index
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setFromMatrixColumn( m, index ) {
 
 		return this.fromArray( m.elements, index * 4 );
 
 	}
 
+	/**
+	 *
+	 * @description 从3阶矩阵中的元素获得列主序向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @param {*} index
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	setFromMatrix3Column( m, index ) {
 
 		return this.fromArray( m.elements, index * 3 );
 
 	}
 
+	/**
+	 *
+	 * @description 判断向量是否相等
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	equals( v ) {
 
 		return ( ( v.x === this.x ) && ( v.y === this.y ) && ( v.z === this.z ) );
 
 	}
 
+	/**
+	 *
+	 * @description 从数组生成3维向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} array
+	 * @param {number} [offset=0]
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	fromArray( array, offset = 0 ) {
 
 		this.x = array[ offset ];
@@ -675,6 +1168,15 @@ class Vector3 {
 
 	}
 
+	/**
+	 * 
+	 * @description 从3维向量生成数组
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} [array=[]]
+	 * @param {number} [offset=0]
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	toArray( array = [], offset = 0 ) {
 
 		array[ offset ] = this.x;
@@ -701,6 +1203,13 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * 随机
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	random() {
 
 		this.x = Math.random();
@@ -711,6 +1220,13 @@ class Vector3 {
 
 	}
 
+	/**
+	 *
+	 * @description 随机方向
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector3
+	 */
 	randomDirection() {
 
 		// Derived from https://mathworld.wolfram.com/SpherePointPicking.html

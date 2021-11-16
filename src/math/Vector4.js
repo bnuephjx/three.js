@@ -1,3 +1,20 @@
+
+/**
+ * @description
+ * w称为比例因子，当w不为0时(一般设1)，表示一个坐标
+ * 当w为0时，在数学上代表无穷远点，即并非一个具体的坐标位置，而是一个具有大小和方向的向量
+ * 从而，通过w我们就可以用同一系统表示两种不同的量
+ * 
+ * 齐次坐标 => 三维坐标
+ * h(x, y, z, w) => v(x/w, y/w, z/w);
+ * 
+ * 三维坐标 => 齐次坐标
+ * l为长度
+ * v(x, y, z) => h(x, y, z, l)
+ * 
+ * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+ * @class Vector4
+ */
 class Vector4 {
 
 	constructor( x = 0, y = 0, z = 0, w = 1 ) {
@@ -9,30 +26,65 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 * 通过获取width 获取 z坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof Vector4
+	 */
 	get width() {
 
 		return this.z;
 
 	}
 
+	/**
+	 *
+	 * 通过设置width 设置 z坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof Vector4
+	 */
 	set width( value ) {
 
 		this.z = value;
 
 	}
 
+	/**
+	 *
+	 * @description 通过获取高度获取y坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof Vector4
+	 */
 	get height() {
 
 		return this.w;
 
 	}
 
+	/**
+	 *
+	 * @description 通过设置高度设置y坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof Vector4
+	 */
 	set height( value ) {
 
 		this.w = value;
 
 	}
 
+	/**
+	 *
+	 * @description 设置四维向量（三维中的齐次坐标）
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @param {*} w
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	set( x, y, z, w ) {
 
 		this.x = x;
@@ -44,6 +96,14 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 * @description 通过一个标量设置坐标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} scalar
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	setScalar( scalar ) {
 
 		this.x = scalar;
@@ -87,6 +147,15 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 * @description 通过索引设置向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} index
+	 * @param {*} value
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	setComponent( index, value ) {
 
 		switch ( index ) {
@@ -103,6 +172,14 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 * @description 通过索引获取
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} index
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	getComponent( index ) {
 
 		switch ( index ) {
@@ -117,12 +194,27 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 * @description 克隆
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	clone() {
 
 		return new this.constructor( this.x, this.y, this.z, this.w );
 
 	}
 
+	/**
+	 *
+	 * @description 复制
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	copy( v ) {
 
 		this.x = v.x;
@@ -134,6 +226,15 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 *
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} w
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	add( v, w ) {
 
 		if ( w !== undefined ) {
@@ -267,6 +368,14 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 * @description 利用四元数设置轴角,达到坐标旋转变换的目的
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} q q 四元数，必须是单位向量
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	setAxisAngleFromQuaternion( q ) {
 
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
@@ -295,6 +404,14 @@ class Vector4 {
 
 	}
 
+	/**
+	 *
+	 * @description 一个参数m(旋转矩阵),达到坐标旋转变换的目的
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m m 4*4矩阵,其3*3的区域必须是纯旋转矩阵
+	 * @return {*} 
+	 * @memberof Vector4
+	 */
 	setAxisAngleFromRotationMatrix( m ) {
 
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm

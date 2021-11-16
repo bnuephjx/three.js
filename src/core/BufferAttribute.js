@@ -7,6 +7,13 @@ import { StaticDrawUsage } from '../constants.js';
 const _vector = /*@__PURE__*/ new Vector3();
 const _vector2 = /*@__PURE__*/ new Vector2();
 
+/**
+ * @description 这个类用于存储与BufferGeometry相关联的 attribute（例如顶点位置向量，面片索引，法向量，颜色值，UV坐标以及任何自定义 attribute ）。
+ *  利用 BufferAttribute，可以更高效的向GPU传递数据。
+ *
+ * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+ * @class BufferAttribute
+ */
 class BufferAttribute {
 
 	constructor( array, itemSize, normalized ) {
@@ -19,20 +26,38 @@ class BufferAttribute {
 
 		this.name = '';
 
+		// 在 array 中保存着缓存中的数据
 		this.array = array;
+
+		// 保存在 array 中矢量的长度
 		this.itemSize = itemSize;
+
+		// 保存 array 除以 itemSize 之后的大小
+		// 若缓存存储三元组（例如顶点位置、法向量、颜色值），则该值应等于队列中三元组的个数
 		this.count = array !== undefined ? array.length / itemSize : 0;
+
+		// 指明缓存中数据在转化为GLSL着色器代码中数据时是否需要被归一化。
 		this.normalized = normalized === true;
 
+		// 为优化目的定义数据存储的预期使用模式。
+		// 对应WebGLRenderingContext.bufferData()的使用参数。
+		// 默认为 StaticDrawUsage。查看所有可能值的用法常量。
 		this.usage = StaticDrawUsage;
+
+		// 对象包含如下成员:
+		// offset: 默认值为 0。 指明更新的起始位置。
+		// count: 默认值为 -1，表示不指定更新范围。
 		this.updateRange = { offset: 0, count: - 1 };
 
 		this.version = 0;
 
 	}
 
+	// attribute 数据传输到GPU后的回调函数
 	onUploadCallback() {}
 
+	// 该标志位指明当前 attribute 已经被修改过，且需要再次送入 GPU 处理。
+	// 当开发者改变了该队列的值，则标志位需要设置为 true。
 	set needsUpdate( value ) {
 
 		if ( value === true ) this.version ++;

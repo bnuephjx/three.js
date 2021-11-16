@@ -6,17 +6,34 @@ class OrthographicCamera extends Camera {
 
 		super();
 
+		// 类型
 		this.type = 'OrthographicCamera';
 
+		// 获取或者设置摄像机的缩放倍数，其默认值为1。
 		this.zoom = 1;
+
+		// 这个值是由setViewOffset来设置的，其默认值为null
 		this.view = null;
 
+		// 摄像机视锥体左侧面
 		this.left = left;
+
+		// 摄像机视锥体右侧面。
 		this.right = right;
+
+		// 摄像机视锥体上侧面
 		this.top = top;
+
+		// 摄像机视锥体下侧面
 		this.bottom = bottom;
 
+		// 摄像机视锥体近端面。其默认值为0.1
+		// 其值的有效范围介于0和far（摄像机视锥体远端面）之间。
+		// 请注意，和PerspectiveCamera不同，0对于OrthographicCamera的近端面来说是一个有效值。
 		this.near = near;
+
+		// 摄像机视锥体远端面，其默认值为2000。
+		// 该值必须大于near 的值。
 		this.far = far;
 
 		this.updateProjectionMatrix();
@@ -69,6 +86,12 @@ class OrthographicCamera extends Camera {
 
 	}
 
+	/**
+	 *
+	 * @description 清除任何由.setViewOffset设置的偏移量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof OrthographicCamera
+	 */
 	clearViewOffset() {
 
 		if ( this.view !== null ) {

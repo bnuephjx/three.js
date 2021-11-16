@@ -19,6 +19,17 @@ const _box = /*@__PURE__*/ new Box3();
 const _boxMorphTargets = /*@__PURE__*/ new Box3();
 const _vector = /*@__PURE__*/ new Vector3();
 
+/**
+ *
+ * @description 将所有的数据包括顶点位置,法线,面,颜色,uv和其它的自定义属性存在缓冲区
+ * 这样可以减少GPU的负荷,BufferGeometry同样也比Geometry对象复杂,增加了使用的难度,这里的属性都是存放在数组中
+ * 比如顶点位置不是Vector3对象,颜色也不是color对象,而是数组.需要访问这些属性,需要从属性缓冲区中读原始数据
+ * 根据BufferGeometry类特性,我们在创建一些静态对象,实例化后不经常操作的对象时,选择这个类
+ * 读取或编辑 BufferGeometry 中的数据，见 BufferAttribute 文档。
+ * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+ * @class BufferGeometry
+ * @extends {EventDispatcher}
+ */
 class BufferGeometry extends EventDispatcher {
 
 	constructor() {
@@ -27,34 +38,67 @@ class BufferGeometry extends EventDispatcher {
 
 		Object.defineProperty( this, 'id', { value: _id ++ } );
 
+		// BufferGeometry对象的UUID
 		this.uuid = MathUtils.generateUUID();
 
+		// 对象名称
 		this.name = '';
+
+		// 对象类型
 		this.type = 'BufferGeometry';
 
+		// 允许顶点在多个三角面片间可以重用。
 		this.index = null;
+
+		// 对象属性列表
+		// 可以通过 .setAttribute 和 .getAttribute 添加和访问与当前几何体有关的 attribute
 		this.attributes = {};
 
+		// 存储 BufferAttribute 的 Hashmap，存储了几何体 morph targets 的细节信息。
 		this.morphAttributes = {};
 		this.morphTargetsRelative = false;
 
+		// 将当前几何体分割成组进行渲染，每个部分都会在单独的 WebGL 的 draw call 中进行绘制。
+		// 该方法可以让当前的 bufferGeometry 可以使用一个材质队列进行描述。
 		this.groups = [];
 
+		// 当前 bufferGeometry 的外边界矩形
 		this.boundingBox = null;
+
+		// 当前 bufferGeometry 的外边界球形。 
 		this.boundingSphere = null;
 
+		// 用于判断几何体的哪个部分需要被渲染。
+		// 该值不应该直接被设置，而需要通过 .setDrawRange 进行设置。
 		this.drawRange = { start: 0, count: Infinity };
 
+		// 存储 BufferGeometry 的自定义数据的对象。
+		// 为保持对象在克隆时完整，该对象不应该包括任何函数的引用。
 		this.userData = {};
 
 	}
 
+	/**
+	 *
+	 * @description 返回缓存相关的 .index。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	getIndex() {
 
 		return this.index;
 
 	}
 
+	/**
+	 *
+	 * @description 设置缓存的 .index。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} index
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	setIndex( index ) {
 
 		if ( Array.isArray( index ) ) {
@@ -71,12 +115,32 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 返回指定名称的 attribute。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} name
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	getAttribute( name ) {
 
 		return this.attributes[ name ];
 
 	}
 
+	/**
+	 *
+	 * @description 为当前几何体设置一个 attribute 属性。
+	 * 在类的内部，有一个存储 .attributes 的 hashmap， 通过该 hashmap，遍历 attributes 的速度会更快。
+	 * 而使用该方法，可以向 hashmap 内部增加 attribute。 
+	 * 所以，你需要使用该方法来添加 attributes。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} name
+	 * @param {*} attribute
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	setAttribute( name, attribute ) {
 
 		this.attributes[ name ] = attribute;
@@ -85,6 +149,14 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 删除具有指定名称的 attribute。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} name
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	deleteAttribute( name ) {
 
 		delete this.attributes[ name ];
@@ -93,12 +165,29 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 判断是否有这个属性
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} name
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	hasAttribute( name ) {
 
 		return this.attributes[ name ] !== undefined;
 
 	}
 
+	/**
+	 *
+	 * @description 为当前几何体增加一个 group，详见 groups 属性
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} start
+	 * @param {*} count
+	 * @param {number} [materialIndex=0]
+	 * @memberof BufferGeometry
+	 */
 	addGroup( start, count, materialIndex = 0 ) {
 
 		this.groups.push( {
@@ -111,12 +200,26 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 清空
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof BufferGeometry
+	 */
 	clearGroups() {
 
 		this.groups = [];
 
 	}
 
+	/**
+	 *
+	 * @description 设置缓存的 .drawRange。详见相关属性说明
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} start
+	 * @param {*} count
+	 * @memberof BufferGeometry
+	 */
 	setDrawRange( start, count ) {
 
 		this.drawRange.start = start;
@@ -124,6 +227,14 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 用给定矩阵转换几何体的顶点坐标。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} matrix
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	applyMatrix4( matrix ) {
 
 		const position = this.attributes.position;
@@ -174,6 +285,14 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 用给定四元数转换几何体的顶点坐标。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} q
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	applyQuaternion( q ) {
 
 		_m1.makeRotationFromQuaternion( q );
@@ -184,6 +303,15 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 在 X 轴上旋转几何体。
+	 * 该操作一般在一次处理中完成，不会循环处理。典型的用法是通过调用 Object3D.rotation 实时旋转几何体
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	rotateX( angle ) {
 
 		// rotate geometry around world x-axis
@@ -196,6 +324,15 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 在 Y 轴上旋转几何体。
+	 * 该操作一般在一次处理中完成，不会循环处理。典型的用法是通过调用 Object3D.rotation 实时旋转几何体。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	rotateY( angle ) {
 
 		// rotate geometry around world y-axis
@@ -208,6 +345,15 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 在 Z 轴上旋转几何体。
+	 * 该操作一般在一次处理中完成，不会循环处理。典型的用法是通过调用 Object3D.rotation 实时旋转几何体。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	rotateZ( angle ) {
 
 		// rotate geometry around world z-axis
@@ -220,6 +366,17 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 移动几何体。
+	 * 该操作一般在一次处理中完成，不会循环处理。典型的用法是通过调用 Object3D.rotation 实时旋转几何体。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	translate( x, y, z ) {
 
 		// translate geometry
@@ -232,6 +389,17 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 缩放几何体。
+	 * 该操作一般在一次处理中完成，不会循环处理。典型的用法是通过调用 Object3D.scale 实时旋转几何体。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	scale( x, y, z ) {
 
 		// scale geometry
@@ -244,6 +412,15 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 旋转几何体朝向控件中的一点。
+	 * 该过程通常在一次处理中完成，不会循环处理。典型的用法是过通过调用 Object3D.lookAt 实时改变 mesh 朝向。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} vector 几何体所朝向的世界坐标
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	lookAt( vector ) {
 
 		_obj.lookAt( vector );
@@ -256,6 +433,13 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 根据边界矩形将几何体居中
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	center() {
 
 		this.computeBoundingBox();
@@ -268,6 +452,14 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 通过点队列设置该 BufferGeometry 的 attribute。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} points
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	setFromPoints( points ) {
 
 		const position = [];
@@ -285,6 +477,14 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 计算当前几何体的的边界矩形，该操作会更新已有 [param:.boundingBox]。
+	 * 边界矩形不会默认计算，需要调用该接口指定计算边界矩形，否则保持默认值 null。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	computeBoundingBox() {
 
 		if ( this.boundingBox === null ) {
@@ -355,6 +555,14 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 计算当前几何体的的边界球形，该操作会更新已有 [param:.boundingSphere]。
+	 * 边界球形不会默认计算，需要调用该接口指定计算边界球形，否则保持默认值 null
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	computeBoundingSphere() {
 
 		if ( this.boundingSphere === null ) {
@@ -467,6 +675,13 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 计算并将切线属性添加到此几何体
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	computeTangents() {
 
 		const index = this.index;
@@ -632,6 +847,12 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 通过面片法向量的平均值计算每个顶点的法向量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof BufferGeometry
+	 */
 	computeVertexNormals() {
 
 		const index = this.index;
@@ -724,6 +945,16 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 同参数指定的 BufferGeometry 进行合并。
+	 * 可以通过可选参数指定，从哪个偏移位置开始进行 merge。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} geometry
+	 * @param {*} offset
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	merge( geometry, offset ) {
 
 		if ( ! ( geometry && geometry.isBufferGeometry ) ) {
@@ -771,6 +1002,13 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 几何体中的每个法向量长度将会为 1。
+	 * 这样操作会更正光线在表面的效果。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof BufferGeometry
+	 */
 	normalizeNormals() {
 
 		const normals = this.attributes.normal;
@@ -787,6 +1025,13 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 *
+	 * @description 返回已索引的 BufferGeometry 的非索引版本
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof BufferGeometry
+	 */
 	toNonIndexed() {
 
 		function convertBufferAttribute( attribute, indices ) {
@@ -1117,6 +1362,12 @@ class BufferGeometry extends EventDispatcher {
 
 	}
 
+	/**
+	 * @description 从内存中销毁对象。
+	 * 如果在运行是需要从内存中删除 BufferGeometry，则需要调用该函数。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof BufferGeometry
+	 */
 	dispose() {
 
 		this.dispatchEvent( { type: 'dispose' } );

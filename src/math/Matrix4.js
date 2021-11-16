@@ -1,5 +1,16 @@
 import { Vector3 } from './Vector3.js';
 
+/**
+ * 4 x 4 矩阵
+ * @description 表面上通过行主序设置
+ * 实际通过列主序运算
+ * 0  1  2  3
+ * 4  5  6  7
+ * 8  9  10 11
+ * 12 13 14 15
+ * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+ * @class Matrix4
+ */
 class Matrix4 {
 
 	constructor() {
@@ -34,6 +45,13 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 单位矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	identity() {
 
 		this.set(
@@ -49,12 +67,27 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 克隆
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	clone() {
 
 		return new Matrix4().fromArray( this.elements );
 
 	}
 
+	/**
+	 *
+	 * @description 复制
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	copy( m ) {
 
 		const te = this.elements;
@@ -69,6 +102,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 复制矩阵的平移分量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	copyPosition( m ) {
 
 		const te = this.elements, me = m.elements;
@@ -81,6 +122,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 从矩阵中设置一个4 x 4矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	setFromMatrix3( m ) {
 
 		const me = m.elements;
@@ -98,6 +147,16 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 提取基础变换矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} xAxis
+	 * @param {*} yAxis
+	 * @param {*} zAxis
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	extractBasis( xAxis, yAxis, zAxis ) {
 
 		xAxis.setFromMatrixColumn( this, 0 );
@@ -108,6 +167,16 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 设置基础变换矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} xAxis 基向量
+	 * @param {*} yAxis 基向量
+	 * @param {*} zAxis 基向量
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeBasis( xAxis, yAxis, zAxis ) {
 
 		this.set(
@@ -121,6 +190,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 提取旋转分量到一个矩阵中
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	extractRotation( m ) {
 
 		// this method does not support reflection matrices
@@ -156,6 +233,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 从欧拉角转换为旋转矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} euler
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeRotationFromEuler( euler ) {
 
 		if ( ! ( euler && euler.isEuler ) ) {
@@ -284,12 +369,33 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 从四元数转换为旋转矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} q
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeRotationFromQuaternion( q ) {
 
 		return this.compose( _zero, q, _one );
 
 	}
 
+	/**
+	 * @description 设置一个视图矩阵，参数都是Vector3对象，该矩阵只会用到eye和center的相对位置
+	 *该视图矩阵表示，摄像机在eye位置看向target位置，且向上的向量（这一点稍后解释）为up时的视图矩阵
+	 *视图矩阵又可以看做摄像机的模型矩阵，所以该函数产生的矩阵又可以表示以下变换：将物体从原点平移至位置center-eye
+	 *再将其旋转至向上的向量为up。向上的向量up用来固定相机，可以想象当相机固定在一点，镜头朝向固定方向的时候
+	 *还可以是在一个维度里自由旋转的，up向量固定相机的这个维度
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} eye 表示相机位置的Vector3三维向量
+	 * @param {*} target 表示目标的Vector3三维向量
+	 * @param {*} up 表示向上的Vector3三维向量
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	lookAt( eye, target, up ) {
 
 		const te = this.elements;
@@ -337,6 +443,15 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 矩阵乘法
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @param {*} n
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	multiply( m, n ) {
 
 		if ( n !== undefined ) {
@@ -350,6 +465,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 右乘
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	premultiply( m ) {
 
 		return this.multiplyMatrices( m, this );
@@ -396,6 +519,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 矩阵与标量相乘
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} s
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	multiplyScalar( s ) {
 
 		const te = this.elements;
@@ -409,6 +540,13 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 行主序
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	determinant() {
 
 		const te = this.elements;
@@ -459,6 +597,13 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 转置矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	transpose() {
 
 		const te = this.elements;
@@ -476,6 +621,16 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 设置矩阵的平移分量
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	setPosition( x, y, z ) {
 
 		const te = this.elements;
@@ -498,6 +653,13 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 逆矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	invert() {
 
 		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
@@ -543,6 +705,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * 通过 预先计算 缩放比例向量，将指定的比例向量应用到此 Matrix4(4x4矩阵)
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v 接受一个缩放比例的向量
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	scale( v ) {
 
 		const te = this.elements;
@@ -557,6 +727,13 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 获取缩放比例的最大值
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	getMaxScaleOnAxis() {
 
 		const te = this.elements;
@@ -569,6 +746,16 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 生成平移矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeTranslation( x, y, z ) {
 
 		this.set(
@@ -584,6 +771,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 生成X轴旋转矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} theta
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeRotationX( theta ) {
 
 		const c = Math.cos( theta ), s = Math.sin( theta );
@@ -601,6 +796,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 生成Y轴旋转矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} theta
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeRotationY( theta ) {
 
 		const c = Math.cos( theta ), s = Math.sin( theta );
@@ -618,6 +821,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 生成Z轴旋转矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} theta
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeRotationZ( theta ) {
 
 		const c = Math.cos( theta ), s = Math.sin( theta );
@@ -635,6 +846,15 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 生成绕任意向量axis轴旋转矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} axis
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeRotationAxis( axis, angle ) {
 
 		// Based on http://www.gamedev.net/reference/articles/article1199.asp
@@ -658,6 +878,16 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 生成缩放矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} z
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeScale( x, y, z ) {
 
 		this.set(
@@ -673,6 +903,19 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 生成斜切矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} xy
+	 * @param {*} xz
+	 * @param {*} yx
+	 * @param {*} yz
+	 * @param {*} zx
+	 * @param {*} zy
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeShear( xy, xz, yx, yz, zx, zy ) {
 
 		this.set(
@@ -688,6 +931,16 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 通过位置，旋转，比例参数组合生成仿射变换矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} position
+	 * @param {*} quaternion
+	 * @param {*} scale
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	compose( position, quaternion, scale ) {
 
 		const te = this.elements;
@@ -724,6 +977,16 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 通过位置，旋转，比例，将放射变换矩阵分解
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} position
+	 * @param {*} quaternion
+	 * @param {*} scale
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	decompose( position, quaternion, scale ) {
 
 		const te = this.elements;
@@ -769,6 +1032,19 @@ class Matrix4 {
 
 	}
 
+	/**
+	 * 
+	 * @description 透视投影矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} left
+	 * @param {*} right
+	 * @param {*} top
+	 * @param {*} bottom
+	 * @param {*} near
+	 * @param {*} far
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makePerspective( left, right, top, bottom, near, far ) {
 
 		if ( far === undefined ) {
@@ -795,6 +1071,19 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 正交投影矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} left
+	 * @param {*} right
+	 * @param {*} top
+	 * @param {*} bottom
+	 * @param {*} near
+	 * @param {*} far
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	makeOrthographic( left, right, top, bottom, near, far ) {
 
 		const te = this.elements;
@@ -815,6 +1104,14 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 判断矩阵是否相等
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} matrix
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	equals( matrix ) {
 
 		const te = this.elements;
@@ -830,6 +1127,15 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 通过数组构成矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} array
+	 * @param {number} [offset=0]
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	fromArray( array, offset = 0 ) {
 
 		for ( let i = 0; i < 16; i ++ ) {
@@ -842,6 +1148,15 @@ class Matrix4 {
 
 	}
 
+	/**
+	 *
+	 * @description 将矩阵数组化
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} [array=[]]
+	 * @param {number} [offset=0]
+	 * @return {*} 
+	 * @memberof Matrix4
+	 */
 	toArray( array = [], offset = 0 ) {
 
 		const te = this.elements;

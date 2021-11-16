@@ -196,12 +196,29 @@ class Matrix3 {
 
 	}
 
+	/**
+	 *
+	 * @description 从4阶矩阵中获得正规矩阵
+	 * 几何意义： 伴随矩阵,4维矩阵左上角的3×3矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} matrix4
+	 * @return {*} 
+	 * @memberof Matrix3
+	 */
 	getNormalMatrix( matrix4 ) {
 
 		return this.setFromMatrix4( matrix4 ).invert().transpose();
 
 	}
 
+	/**
+	 *
+	 * @description 转置矩阵到数组
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} r
+	 * @return {*} 
+	 * @memberof Matrix3
+	 */
 	transposeIntoArray( r ) {
 
 		const m = this.elements;
@@ -220,6 +237,20 @@ class Matrix3 {
 
 	}
 
+	/**
+	 *
+	 * @description UV变换矩阵
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} tx
+	 * @param {*} ty
+	 * @param {*} sx
+	 * @param {*} sy
+	 * @param {*} rotation
+	 * @param {*} cx
+	 * @param {*} cy
+	 * @return {*} 
+	 * @memberof Matrix3
+	 */
 	setUvTransform( tx, ty, sx, sy, rotation, cx, cy ) {
 
 		const c = Math.cos( rotation );

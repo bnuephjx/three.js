@@ -9,17 +9,30 @@ class PerspectiveCamera extends Camera {
 
 		this.type = 'PerspectiveCamera';
 
+		// 摄像机视锥体垂直视野角度
 		this.fov = fov;
+
+		// 缩放比例
 		this.zoom = 1;
 
+		// 摄像机视锥体近端面
 		this.near = near;
+
+		// 摄像机视锥体远端面
 		this.far = far;
+
+		// 用于立体视觉和景深效果的物体的距离。 这个参数不会影响摄像机的投影矩阵，除非使用了StereoCamera。 默认值是10。
 		this.focus = 10;
 
+		// 摄像机视锥体的长宽比，
+		// 通常是使用画布的宽/画布的高。默认值是1（正方形画布）
 		this.aspect = aspect;
 		this.view = null;
 
+		// 胶片尺寸，其默认值为35（毫米）。 这个参数不会影响摄像机的投影矩阵，除非.filmOffset被设置为了一个非零的值。
 		this.filmGauge = 35;	// width of the film (default in millimeters)
+
+		// 水平偏离中心偏移量，和.filmGauge单位相同。默认值为0。
 		this.filmOffset = 0;	// horizontal film offset (same unit as gauge)
 
 		this.updateProjectionMatrix();
@@ -48,6 +61,8 @@ class PerspectiveCamera extends Camera {
 	}
 
 	/**
+	 * @description 通过相对于当前.filmGauge的焦距，设置FOV。
+	 * 默认情况下，焦距是为35mm（全画幅）摄像机而指定的。
 	 * Sets the FOV by focal length in respect to the current .filmGauge.
 	 *
 	 * The default film gauge is 35, so that the focal length can be specified for
@@ -132,6 +147,7 @@ class PerspectiveCamera extends Camera {
 	 *
 	 *   Note there is no reason monitors have to be the same size or in a grid.
 	 */
+	// 在较大的viewing frustum（视锥体）中设置偏移量，对于多窗口或者多显示器的设置是很有用的
 	setViewOffset( fullWidth, fullHeight, x, y, width, height ) {
 
 		this.aspect = fullWidth / fullHeight;
@@ -174,6 +190,12 @@ class PerspectiveCamera extends Camera {
 
 	}
 
+	/**
+	 *
+	 * @description 更新摄像机投影矩阵。在任何参数被改变以后必须被调用
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof PerspectiveCamera
+	 */
 	updateProjectionMatrix() {
 
 		const near = this.near;

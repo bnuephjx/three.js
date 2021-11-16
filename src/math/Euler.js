@@ -6,6 +6,12 @@ import { clamp } from './MathUtils.js';
 const _matrix = /*@__PURE__*/ new Matrix4();
 const _quaternion = /*@__PURE__*/ new Quaternion();
 
+/**
+ *
+ * @description 欧拉角描述一个旋转变换，通过指定轴顺序和其各个轴向上的指定旋转角度来旋转一个物体
+ * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+ * @class Euler
+ */
 class Euler {
 
 	constructor( x = 0, y = 0, z = 0, order = Euler.DefaultOrder ) {
@@ -62,6 +68,12 @@ class Euler {
 
 	}
 
+	/**
+	 *
+	 * @description 设置旋转顺序
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof Euler
+	 */
 	set order( value ) {
 
 		this._order = value;
@@ -101,6 +113,16 @@ class Euler {
 
 	}
 
+	/**
+	 *
+	 * @description 使用基于 order 顺序的纯旋转矩阵来设置当前欧拉角。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m  Matrix4 矩阵上面的3x3部分是一个纯旋转矩阵rotation matrix （也就是不发生缩放）
+	 * @param {*} [order=this._order] (可选参数) 表示旋转顺序的字符串
+	 * @param {boolean} [update=true] 是否更新
+	 * @return {*} 
+	 * @memberof Euler
+	 */
 	setFromRotationMatrix( m, order = this._order, update = true ) {
 
 		// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
@@ -234,6 +256,16 @@ class Euler {
 
 	}
 
+	/**
+	 *
+	 * @description 根据 order 指定的方向，使用归一化四元数设置这个欧拉变换的角度
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} q
+	 * @param {*} order
+	 * @param {*} update
+	 * @return {*} 
+	 * @memberof Euler
+	 */
 	setFromQuaternion( q, order, update ) {
 
 		_matrix.makeRotationFromQuaternion( q );
@@ -242,14 +274,32 @@ class Euler {
 
 	}
 
+	/**
+	 *
+	 * @description 通过向量设置欧拉角
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @param {*} [order=this._order]
+	 * @return {*} 
+	 * @memberof Euler
+	 */
 	setFromVector3( v, order = this._order ) {
 
 		return this.set( v.x, v.y, v.z, order );
 
 	}
 
+	/**
+	 *
+	 * @description 通过这个欧拉角创建一个四元数，然后用这个四元数和新顺序设置这个欧拉角
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} newOrder
+	 * @return {*} 
+	 * @memberof Euler
+	 */
 	reorder( newOrder ) {
 
+		// 警告: 这将弃用旋转信息
 		// WARNING: this discards revolution information -bhouston
 
 		_quaternion.setFromEuler( this );
@@ -288,6 +338,15 @@ class Euler {
 
 	}
 
+
+	/**
+	 *
+	 * @description (可选参数) 如果指定了该参数结果将会被复制给该参数，否者会创建一个新的 Vector3
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} optionalResult
+	 * @return {*} 
+	 * @memberof Euler
+	 */
 	toVector3( optionalResult ) {
 
 		if ( optionalResult ) {
@@ -316,7 +375,14 @@ class Euler {
 
 Euler.prototype.isEuler = true;
 
+// 默认值为 'XYZ'，这意味着对象将首先是 绕X轴旋转，然后是Y轴，最后是Z轴
+// 这意味着旋转是在本地坐标系下进行的。
+// 也就是说，对于“XYZ”顺序，
+// 首先是围绕local-X轴旋转(与world- x轴相同)， 
+// 然后是local-Y(现在可能与world y轴不同)，
+// 然后是local-Z(可能与world z轴不同)
 Euler.DefaultOrder = 'XYZ';
+
 Euler.RotationOrders = [ 'XYZ', 'YZX', 'ZXY', 'XZY', 'YXZ', 'ZYX' ];
 
 export { Euler };

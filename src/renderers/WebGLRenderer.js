@@ -57,29 +57,53 @@ function createCanvasElement() {
 
 function WebGLRenderer( parameters = {} ) {
 
+	//  一个供渲染器绘制其输出的canvas 它和下面的domElement属性对应。 如果没有传这个参数，会创建一个新canvas
 	const _canvas = parameters.canvas !== undefined ? parameters.canvas : createCanvasElement(),
+
+		// 可用于将渲染器附加到已有的渲染环境(RenderingContext)中。默认值是null
 		_context = parameters.context !== undefined ? parameters.context : null,
 
+		// canvas是否包含alpha (透明度)。默认为 false
 		_alpha = parameters.alpha !== undefined ? parameters.alpha : false,
+
+		// 绘图缓存是否有一个至少6位的深度缓存(depth buffer )。 默认是true.
 		_depth = parameters.depth !== undefined ? parameters.depth : true,
+
+		// 绘图缓存是否有一个至少8位的模板缓存(stencil buffer)。默认为true
 		_stencil = parameters.stencil !== undefined ? parameters.stencil : true,
+
+		// 是否执行抗锯齿。默认为false.
 		_antialias = parameters.antialias !== undefined ? parameters.antialias : false,
+
+		// renderer是否假设颜色有 premultiplied alpha. 默认为true
 		_premultipliedAlpha = parameters.premultipliedAlpha !== undefined ? parameters.premultipliedAlpha : true,
+
+		// 是否保留缓直到手动清除或被覆盖。 默认false.
 		_preserveDrawingBuffer = parameters.preserveDrawingBuffer !== undefined ? parameters.preserveDrawingBuffer : false,
+
+		// 提示用户代理怎样的配置更适用于当前WebGL环境。 可能是"high-performance", "low-power" 或 "default"。默认是"default". 详见WebGL spec
 		_powerPreference = parameters.powerPreference !== undefined ? parameters.powerPreference : 'default',
+
+		// 检测低性能时渲染器创建是否会失败。默认为假。有关详细信息，请参阅 WebGL 规范。
 		_failIfMajorPerformanceCaveat = parameters.failIfMajorPerformanceCaveat !== undefined ? parameters.failIfMajorPerformanceCaveat : false;
 
+	// 当前渲染列表
 	let currentRenderList = null;
+
+	// 当前渲染状态
 	let currentRenderState = null;
 
 	// render() can be called from within a callback triggered by another render.
 	// We track this so that the nested render call gets its list and state isolated from the parent render call.
 
+	// 渲染列表堆栈
 	const renderListStack = [];
+
+	// 渲染状态列表堆栈
 	const renderStateStack = [];
 
 	// public properties
-
+	// 一个canvas，渲染器在其上绘制输出。 
 	this.domElement = _canvas;
 
 	// Debug configuration container
@@ -93,33 +117,46 @@ function WebGLRenderer( parameters = {} ) {
 	};
 
 	// clearing
-
+	// 定义渲染器是否在渲染每一帧之前自动清除其输出。 
 	this.autoClear = true;
+
+	// 如果autoClear为true, 定义renderer是否清除颜色缓存。 默认是true
 	this.autoClearColor = true;
+
+	// 如果autoClear是true, 定义renderer是否清除深度缓存。 默认是true
 	this.autoClearDepth = true;
+
+	// 如果autoClear是true, 定义renderer是否清除模板缓存. 默认是true
 	this.autoClearStencil = true;
 
 	// scene graph
-
+	// 定义渲染器是否应对对象进行排序。默认是true.
 	this.sortObjects = true;
 
 	// user-defined clipping
 
+	// 用户自定义的剪裁平面，在世界空间中被指定为THREE.Plane对象。 这些平面全局使用。空间中与该平面点积为负的点将被切掉。 默认值是[]
 	this.clippingPlanes = [];
+
+	// 定义渲染器是否考虑对象级剪切平面。 默认为false.
 	this.localClippingEnabled = false;
 
 	// physically based shading
 
 	this.gammaFactor = 2.0;	// for backwards compatibility
+
+	// 定义渲染器的输出编码。默认为THREE.LinearEncoding
 	this.outputEncoding = LinearEncoding;
 
 	// physical lights
-
+	// 是否使用物理上正确的光照模式。 默认是false。
 	this.physicallyCorrectLights = false;
 
 	// tone mapping
-
+	// 默认是NoToneMapping。
 	this.toneMapping = NoToneMapping;
+
+	// 色调映射的曝光级别。默认是1
 	this.toneMappingExposure = 1.0;
 
 	// internal properties
@@ -133,8 +170,11 @@ function WebGLRenderer( parameters = {} ) {
 	let _currentActiveCubeFace = 0;
 	let _currentActiveMipmapLevel = 0;
 	let _currentRenderTarget = null;
+
+	// 当前材质ID
 	let _currentMaterialId = - 1;
 
+	// 当前相机
 	let _currentCamera = null;
 
 	const _currentViewport = new Vector4();
@@ -179,6 +219,7 @@ function WebGLRenderer( parameters = {} ) {
 
 	const _emptyScene = { background: null, fog: null, environment: null, overrideMaterial: null, isScene: true };
 
+	// 获取像素比
 	function getTargetPixelRatio() {
 
 		return _currentRenderTarget === null ? _pixelRatio : 1;
@@ -335,18 +376,35 @@ function WebGLRenderer( parameters = {} ) {
 
 	// API
 
+	/**
+	 *
+	 * @description  获取WebGL上下文对象
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 */
 	this.getContext = function () {
 
 		return _gl;
 
 	};
 
+	/**
+	 *
+	 * @description 返回一个对象，这个对象中存有在WebGL环境在创建的时候所设置的属性
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 */
 	this.getContextAttributes = function () {
 
 		return _gl.getContextAttributes();
 
 	};
 
+	/**
+	 *
+	 * @description 模拟WebGL环境的丢失。需要支持 WEBGL_lose_context 扩展才能用。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 */
 	this.forceContextLoss = function () {
 
 		const extension = extensions.get( 'WEBGL_lose_context' );
@@ -354,6 +412,11 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 模拟WebGL环境的恢复
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 */
 	this.forceContextRestore = function () {
 
 		const extension = extensions.get( 'WEBGL_lose_context' );
@@ -361,12 +424,25 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 返回当前使用设备像素比
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 */
 	this.getPixelRatio = function () {
 
 		return _pixelRatio;
 
 	};
 
+	/**
+	 * 
+	 * @description 设置设备像素比。通常用于避免HiDPI设备上绘图模糊
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} value
+	 * @return {*} 
+	 */
 	this.setPixelRatio = function ( value ) {
 
 		if ( value === undefined ) return;
@@ -377,12 +453,28 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 返回包含渲染器输出canvas的宽度和高度(单位像素)的对象
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 */
 	this.getSize = function ( target ) {
 
 		return target.set( _width, _height );
 
 	};
 
+	/**
+	 *
+	 * @description 将输出canvas的大小调整为(width, height)并考虑设备像素比，且将视口从(0, 0)开始调整到适合大小 将updateStyle设置为false以阻止对canvas的样式做任何改变
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} width
+	 * @param {*} height
+	 * @param {*} updateStyle
+	 * @return {*} 
+	 */
 	this.setSize = function ( width, height, updateStyle ) {
 
 		if ( xr.isPresenting ) {
@@ -409,6 +501,13 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 返回一个包含渲染器绘图缓存宽度和高度(单位像素)的对象
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 */
 	this.getDrawingBufferSize = function ( target ) {
 
 		return target.set( _width * _pixelRatio, _height * _pixelRatio ).floor();
@@ -429,18 +528,41 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 返回当前视口
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 */
 	this.getCurrentViewport = function ( target ) {
 
 		return target.copy( _currentViewport );
 
 	};
 
+	/**
+	 *
+	 * @description 返回视口
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 */
 	this.getViewport = function ( target ) {
 
 		return target.copy( _viewport );
 
 	};
 
+	/**
+	 *
+	 * @description 将视口大小设置为(x, y)到 (x + width, y + height).
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} x
+	 * @param {*} y
+	 * @param {*} width
+	 * @param {*} height
+	 */
 	this.setViewport = function ( x, y, width, height ) {
 
 		if ( x.isVector4 ) {
@@ -505,6 +627,13 @@ function WebGLRenderer( parameters = {} ) {
 
 	// Clearing
 
+	/**
+	 *
+	 * @description 获取清屏颜色
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} target
+	 * @return {*} 
+	 */
 	this.getClearColor = function ( target ) {
 
 		return target.copy( background.getClearColor() );
@@ -517,6 +646,12 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 获取清屏透明度
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 */
 	this.getClearAlpha = function () {
 
 		return background.getClearAlpha();
@@ -529,6 +664,14 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 清屏操作
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} color
+	 * @param {*} depth
+	 * @param {*} stencil
+	 */
 	this.clear = function ( color, depth, stencil ) {
 
 		let bits = 0;
@@ -559,8 +702,11 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
-	//
-
+	/**
+	 *
+	 * @description 处理当前的渲染环境
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 */
 	this.dispose = function () {
 
 		_canvas.removeEventListener( 'webglcontextlost', onContextLost, false );
@@ -663,6 +809,20 @@ function WebGLRenderer( parameters = {} ) {
 
 	// Buffer rendering
 
+
+	/**
+	 *
+	 * @description 渲染buff生成 ， 并绘制
+	 * 主要是顶点，索引，颜色，UV等属性传入SHADER
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} camera 相机对象
+	 * @param {*} scene 场景对象
+	 * @param {*} geometry 几何对象
+	 * @param {*} material  材质
+	 * @param {*} object  对象
+	 * @param {*} group 组
+	 * @return {*} 
+	 */
 	this.renderBufferDirect = function ( camera, scene, geometry, material, object, group ) {
 
 		if ( scene === null ) scene = _emptyScene; // renderBufferDirect second parameter used to be fog (could be null)
@@ -799,6 +959,13 @@ function WebGLRenderer( parameters = {} ) {
 
 	// Compile
 
+	/**
+	 *
+	 * @description 使用相机编译场景中的所有材质。这对于在首次渲染之前预编译着色器很有用。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} scene
+	 * @param {*} camera
+	 */
 	this.compile = function ( scene, camera ) {
 
 		currentRenderState = renderStates.get( scene );
@@ -896,6 +1063,17 @@ function WebGLRenderer( parameters = {} ) {
 
 	// Rendering
 
+	/**
+	 *
+	 * @description 用相机(camera)渲染一个场景(scene)或是其它类型的object。
+	 * 渲染一般是在canvas上完成的，或者是renderTarget(如果有指定)
+	 * 如果forceClear值是true，那么颜色、深度及模板缓存将会在渲染之前清除，即使渲染器的autoClear属性值是false
+	 * 即便forceClear设为true, 也可以通过将autoClearColor、autoClearStencil或autoClearDepth属性的值设为false来阻止对应缓存被清除。
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} scene 场景对象
+	 * @param {*} camera 相机对象
+	 * @return {*} 
+	 */
 	this.render = function ( scene, camera ) {
 
 		if ( camera !== undefined && camera.isCamera !== true ) {
@@ -908,11 +1086,11 @@ function WebGLRenderer( parameters = {} ) {
 		if ( _isContextLost === true ) return;
 
 		// update scene graph
-
+		// 更新场景坐标至世界坐标系，包含场景内的子对象
 		if ( scene.autoUpdate === true ) scene.updateMatrixWorld();
 
 		// update camera matrices and frustum
-
+		// 更新相机坐标至世界坐标系
 		if ( camera.parent === null ) camera.updateMatrixWorld();
 
 		if ( xr.enabled === true && xr.isPresenting === true ) {
@@ -931,7 +1109,10 @@ function WebGLRenderer( parameters = {} ) {
 
 		renderStateStack.push( currentRenderState );
 
+		// 相机的投影坐标系和世界坐标系相乘
 		_projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+
+		// // 设置平截头坐标系
 		_frustum.setFromProjectionMatrix( _projScreenMatrix );
 
 		_localClippingEnabled = this.localClippingEnabled;
@@ -942,10 +1123,12 @@ function WebGLRenderer( parameters = {} ) {
 
 		renderListStack.push( currentRenderList );
 
+		// 场景内的对象分类并生成渲染结构
 		projectObject( scene, camera, 0, _this.sortObjects );
 
 		currentRenderList.finish();
 
+		// 把透明和不透明的对象进行排序
 		if ( _this.sortObjects === true ) {
 
 			currentRenderList.sort( _opaqueSort, _transparentSort );
@@ -988,6 +1171,7 @@ function WebGLRenderer( parameters = {} ) {
 
 		} else {
 
+			// 渲染场景
 			renderScene( currentRenderList, scene, camera );
 
 		}
@@ -1050,6 +1234,16 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description  场景内的对象分类并生成渲染对象
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} object
+	 * @param {*} camera
+	 * @param {*} groupOrder
+	 * @param {*} sortObjects
+	 * @return {*} 
+	 */
 	function projectObject( object, camera, groupOrder, sortObjects ) {
 
 		if ( object.visible === false ) return;
@@ -1057,6 +1251,9 @@ function WebGLRenderer( parameters = {} ) {
 		const visible = object.layers.test( camera.layers );
 
 		if ( visible ) {
+
+			// 按对象类型分组
+
 
 			if ( object.isGroup ) {
 
@@ -1067,7 +1264,7 @@ function WebGLRenderer( parameters = {} ) {
 				if ( object.autoUpdate === true ) object.update( camera );
 
 			} else if ( object.isLight ) {
-
+				// 灯光组
 				currentRenderState.pushLight( object );
 
 				if ( object.castShadow ) {
@@ -1077,7 +1274,7 @@ function WebGLRenderer( parameters = {} ) {
 				}
 
 			} else if ( object.isSprite ) {
-
+				// 闪光对象组
 				if ( ! object.frustumCulled || _frustum.intersectsSprite( object ) ) {
 
 					if ( sortObjects ) {
@@ -1155,7 +1352,7 @@ function WebGLRenderer( parameters = {} ) {
 		}
 
 		const children = object.children;
-
+		// 遍历子对象，进行构建渲染对象
 		for ( let i = 0, l = children.length; i < l; i ++ ) {
 
 			projectObject( children[ i ], camera, groupOrder, sortObjects );
@@ -1164,6 +1361,15 @@ function WebGLRenderer( parameters = {} ) {
 
 	}
 
+	/**
+	 *
+	 * @description 渲染场景
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} currentRenderList
+	 * @param {*} scene
+	 * @param {*} camera
+	 * @param {*} viewport
+	 */
 	function renderScene( currentRenderList, scene, camera, viewport ) {
 
 		const opaqueObjects = currentRenderList.opaque;
@@ -1220,6 +1426,15 @@ function WebGLRenderer( parameters = {} ) {
 
 	}
 
+	/**
+	 *
+	 * @description 渲染三维对象
+	 * 只是整理对象，并没有真正渲染，最后会调用renderBuffer
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} renderList 三维对象列表
+	 * @param {*} scene  场景
+	 * @param {*} camera 相机
+	 */
 	function renderObjects( renderList, scene, camera ) {
 
 		const overrideMaterial = scene.isScene === true ? scene.overrideMaterial : null;
@@ -1243,6 +1458,18 @@ function WebGLRenderer( parameters = {} ) {
 
 	}
 
+	/**
+	 *
+	 * @description 渲染生命周期处理
+	 * 最后会调用renderBuffer
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} object
+	 * @param {*} scene
+	 * @param {*} camera
+	 * @param {*} geometry
+	 * @param {*} material
+	 * @param {*} group
+	 */
 	function renderObject( object, scene, camera, geometry, material, group ) {
 
 		object.onBeforeRender( _this, scene, camera, geometry, material, group );
@@ -1761,6 +1988,14 @@ function WebGLRenderer( parameters = {} ) {
 
 	};
 
+	/**
+	 *
+	 * @description 设置渲染目标
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} renderTarget
+	 * @param {number} [activeCubeFace=0]
+	 * @param {number} [activeMipmapLevel=0]
+	 */
 	this.setRenderTarget = function ( renderTarget, activeCubeFace = 0, activeMipmapLevel = 0 ) {
 
 		_currentRenderTarget = renderTarget;

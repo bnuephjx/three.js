@@ -70,6 +70,12 @@ class Mesh extends Object3D {
 
 	}
 
+	/**
+	 *
+	 * @description 更新变形顶点数组
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @memberof Mesh
+	 */
 	updateMorphTargets() {
 
 		const geometry = this.geometry;
@@ -115,6 +121,15 @@ class Mesh extends Object3D {
 
 	}
 
+	/**
+	 *
+	 * @description 光学追踪
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} raycaster
+	 * @param {*} intersects
+	 * @return {*} 
+	 * @memberof Mesh
+	 */
 	raycast( raycaster, intersects ) {
 
 		const geometry = this.geometry;

@@ -39,6 +39,14 @@ class Line extends Object3D {
 
 	}
 
+	/**
+	 *
+	 * @description 计算LineDashedMaterial所需的距离的值的数组。 
+	 * 对于几何体中的每一个顶点，这个方法计算出了当前点到线的起始点的累积长
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Line
+	 */
 	computeLineDistances() {
 
 		const geometry = this.geometry;

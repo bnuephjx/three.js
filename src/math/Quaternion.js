@@ -11,6 +11,19 @@ class Quaternion {
 
 	}
 
+
+	/**
+	 *
+	 * @description 在给定的四元数之间执行球面线性插值，并将结果存储在这个四元数中
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @static
+	 * @param {*} qa
+	 * @param {*} qb
+	 * @param {*} qm
+	 * @param {*} t
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	static slerp( qa, qb, qm, t ) {
 
 		console.warn( 'THREE.Quaternion: Static .slerp() has been deprecated. Use qm.slerpQuaternions( qa, qb, t ) instead.' );
@@ -18,6 +31,21 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 类似于上面的 slerp 方法，但直接对平面数组进行操作
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @static
+	 * @param {*} dst
+	 * @param {*} dstOffset
+	 * @param {*} src0
+	 * @param {*} srcOffset0
+	 * @param {*} src1
+	 * @param {*} srcOffset1
+	 * @param {*} t
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	static slerpFlat( dst, dstOffset, src0, srcOffset0, src1, srcOffset1, t ) {
 
 		// fuzz-free, array-based Quaternion SLERP operation
@@ -203,6 +231,15 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 从由 Euler 角所给定的旋转来设置该四元数
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} euler
+	 * @param {*} update
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	setFromEuler( euler, update ) {
 
 		if ( ! ( euler && euler.isEuler ) ) {
@@ -283,6 +320,15 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 从由 axis（轴） 和 angle（角度）所给定的旋转来设置该四元数
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} axis 假定Axis已被归一化，angle以弧度来表示
+	 * @param {*} angle
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	setFromAxisAngle( axis, angle ) {
 
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
@@ -302,6 +348,15 @@ class Quaternion {
 
 	}
 
+
+	/**
+	 *
+	 * @description 从m的旋转分量中来设置该四元数
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} m
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	setFromRotationMatrix( m ) {
 
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
@@ -360,6 +415,15 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 将该四元数设置为从方向向量 vFrom 旋转到方向向量 vTo 所需的旋转
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} vFrom  vFrom 归一化
+	 * @param {*} vTo  vTo 归一化
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	setFromUnitVectors( vFrom, vTo ) {
 
 		// assumes direction vectors vFrom and vTo are normalized
@@ -403,12 +467,30 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 以弧度返回该四元数与四元数 q 之间的夹角
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} q
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	angleTo( q ) {
 
 		return 2 * Math.acos( Math.abs( MathUtils.clamp( this.dot( q ), - 1, 1 ) ) );
 
 	}
 
+	/**
+	 *
+	 * @description 将该四元数按照步长 step 向目标 q 进行旋转。
+	 * 该方法确保最终的四元数不会超过 q
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} q 目标四元数
+	 * @param {*} step 以弧度为单位的角度步长
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	rotateTowards( q, step ) {
 
 		const angle = this.angleTo( q );
@@ -437,6 +519,14 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 返回该四元数的旋转共轭。 
+	 * 四元数的共轭表示的是，围绕旋转轴在相反方向上的相同旋转
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	conjugate() {
 
 		this._x *= - 1;
@@ -449,6 +539,15 @@ class Quaternion {
 
 	}
 
+
+	/**
+	 *
+	 * @description 计算四元数 v 与当前四元数的（点积）
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} v
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	dot( v ) {
 
 		return this._x * v._x + this._y * v._y + this._z * v._z + this._w * v._w;
@@ -532,6 +631,17 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 处理四元数之间的球面线性插值。
+	 * t 表示该四元数(其中 t 为 0) 和 qb (其中 t 为1) 之间的旋转量。 
+	 * 该四元数会被设置为上述计算的结果
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} qb 另一个四元数旋转
+	 * @param {*} t 闭区间 [0, 1] 中的插值因子
+	 * @return {*} 
+	 * @memberof Quaternion
+	 */
 	slerp( qb, t ) {
 
 		if ( t === 0 ) return this;
@@ -602,6 +712,15 @@ class Quaternion {
 
 	}
 
+	/**
+	 *
+	 * @description 在给定的四元数之间执行球面线性插值，并将结果存储在这个四元数中
+	 * @author (Set the text for this tag by adding docthis.authorName to your settings file.)
+	 * @param {*} qa
+	 * @param {*} qb
+	 * @param {*} t
+	 * @memberof Quaternion
+	 */
 	slerpQuaternions( qa, qb, t ) {
 
 		this.copy( qa ).slerp( qb, t );
